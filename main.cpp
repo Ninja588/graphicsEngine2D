@@ -1,55 +1,37 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <cmath>
+#include "headers/PrimitiveRenderer.h"
+#include "headers/Point2D.h"
+#include "headers/LineSegment.h"
+#include "headers/linker.h"
 
 using namespace std;
-
-class PrimitiveRenderer {
-private:
-    sf::RenderWindow& window;
-public:
-    PrimitiveRenderer(sf::RenderWindow& window) : window(window) {}
-
-    void drawCircle(float radius, float x, float y, sf::Color color) {
-        sf::CircleShape circle(radius);
-        circle.setPosition(x, y);
-        circle.setFillColor(color);
-        window.draw(circle);
-    }
-
-    void drawRectangle(float width, float height, float x, float y, sf::Color color) {
-        sf::RectangleShape rectangle(sf::Vector2f(width, height));
-        rectangle.setPosition(x, y);
-        rectangle.setFillColor(color);
-        window.draw(rectangle);
-    }
-
-    void drawLine(float startX, float startY, float endX, float endY, sf::Color color) {
-        sf::Vertex line[] = {
-            sf::Vertex(sf::Vector2f(startX, startY), color),
-            sf::Vertex(sf::Vector2f(endX, endY), color)
-        };
-        window.draw(line, 2, sf::Lines);
-    }
-};
 
 class Engine {
 private:
     bool checkFullscreen = false;
     int resWidth, resHeight;
 public:
-    Engine(int maxFps, int resWidth, int resHeight) {
-        this->resHeight = resHeight;
-        this->resWidth = resWidth;
-
+    Engine(int maxFps, int resWidth, int resHeight) : resWidth(resWidth), resHeight(resHeight) {
         sf::RenderWindow window(sf::VideoMode(this->resWidth, this->resHeight), "SFML");
         PrimitiveRenderer renderer(window);
-        sf::RectangleShape shape(sf::Vector2f(50,50));
         
-        //sf::RectangleShape doroShape(sf::Vector2f(50,50));
-        //sf::Texture doro;
-        // if(!doro.loadFromFile("d0ro.png")) return;
-        // doroShape.setTexture(&doro);
-        // doroShape.setPosition(-50,0);
+        sf::RectangleShape shape(sf::Vector2f(50,50));
+
+        Point2D point1(150.f, 250.f);
+        Point2D point2(150.f, 350.f);
+        Point2D point3(200.f, 350.f);
+        LineSegment line(point1, point2);
+        line.setStartPoint(point3);
+
+        vector<Point2D> points = { Point2D(100.f, 100.f), Point2D(200.f, 100.f), Point2D(200.f, 200.f), Point2D(100.f, 200.f) };
+        vector<Point2D> points2 = { Point2D(150.f, 150.f), Point2D(250.f, 150.f), Point2D(250.f, 250.f), Point2D(150.f, 250.f) };
+        vector<LineSegment> segments = {
+            LineSegment(Point2D(300.f, 300.f), Point2D(400.f, 300.f)),
+            LineSegment(Point2D(400.f, 300.f), Point2D(400.f, 400.f)),
+            LineSegment(Point2D(400.f, 400.f), Point2D(300.f, 400.f))
+        };
 
         sf::Texture texture;
         if(!texture.loadFromFile("whitePawn.png")) return;
@@ -73,7 +55,6 @@ public:
                     if(event.mouseButton.button == sf::Mouse::Left) {
                         sf::Vector2i mousePos = sf::Mouse::getPosition(window);
                         shape.setPosition(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
-                        point2D(mousePos);
                     }
                 }
             }
@@ -101,40 +82,40 @@ public:
                 {
                     window.create(sf::VideoMode::getFullscreenModes()[0], "SFML", sf::Style::Fullscreen);
                     window.setFramerateLimit(maxFps);
-                    checkFullscreen = true;
                 }
                 else {
                     window.create(sf::VideoMode(this->resWidth, this->resHeight), "SFML");
                     window.setFramerateLimit(maxFps);
-                    checkFullscreen = false;
                 }
+                checkFullscreen = !checkFullscreen;
             }
-
-            // if (sf::Keyboard::isKeyPressed(sf::Keyboard::K)) {
-            //     doroShape.move(100,0);
-            // }
-            // if (sf::Keyboard::isKeyPressed(sf::Keyboard::L)) {
-            //     doroShape.move(-100,0);
-            // }
 
             // do renderowania
             window.clear(sf::Color::White);
 
             renderer.drawCircle(50, 200, 200, sf::Color::Red);
+            renderer.drawLine(80,0,80,200, sf::Color::Black);
+            renderer.drawLineIncremental(30,0,30,200, sf::Color::Black);
+            renderer.drawLineIncremental(600, 100, 550, 50, sf::Color::Black);
+
+            line.draw(renderer);
+
+            renderer.drawOSline(points, sf::Color::Green, false);
+
+            renderer.drawOSline(points2, sf::Color::Blue, true);
+
+            renderer.drawOSline(segments, sf::Color::Red, false);
+
             window.draw(shape);
             //window.draw(doroShape);
             window.display();
         }
     }
-
-    void point2D(sf::Vector2i mousePos) {
-        cout<<"x: "<<mousePos.x<<" y: "<<mousePos.y<<endl;
-    }
 };
 
 int main()
 {
-    Engine engineObj(60, 400, 400);
+    Engine engineObj(60, 800, 600);
 
     return 0;
 }
