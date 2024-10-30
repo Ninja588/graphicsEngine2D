@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <cmath>
+#include <vector> // Dodajemy <vector> dla przechowywania pikseli
 #include "headers/PrimitiveRenderer.h"
 #include "headers/Point2D.h"
 #include "headers/LineSegment.h"
@@ -12,6 +13,8 @@ class Engine {
 private:
     bool checkFullscreen = false;
     int resWidth, resHeight;
+    vector<sf::CircleShape> pixels;  // We will store drawn pixels here
+
 public:
     Engine(int maxFps, int resWidth, int resHeight) : resWidth(resWidth), resHeight(resHeight) {
         sf::RenderWindow window(sf::VideoMode(this->resWidth, this->resHeight), "SFML");
@@ -33,9 +36,10 @@ public:
             LineSegment(Point2D(400.f, 400.f), Point2D(300.f, 400.f))
         };
 
+        vector<Point2D> polygon = { Point2D(400.f, 400.f), Point2D(450.f, 450.f),Point2D(450.f, 475.f),Point2D(500.f, 400.f), Point2D(500.f, 500.f), Point2D(400.f, 500.f),Point2D(425.f, 480.f),Point2D(400.f, 400.f) };
+
         sf::Texture texture;
         if(!texture.loadFromFile("whitePawn.png")) return;
-     
 
         window.setFramerateLimit(maxFps);
         shape.setTexture(&texture);
@@ -55,6 +59,12 @@ public:
                     if(event.mouseButton.button == sf::Mouse::Left) {
                         sf::Vector2i mousePos = sf::Mouse::getPosition(window);
                         shape.setPosition(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
+                        
+                        // Zmiana 1: Dodawanie pikseli do wektora
+                        sf::CircleShape pixel(1.f); // Utworzenie kształtu dla piksela
+                        pixel.setFillColor(sf::Color::Red); // Ustaw kolor na czerwony
+                        pixel.setPosition(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y)); // Ustaw pozycję piksela
+                        pixels.push_back(pixel); // Dodaj piksel do wektora
                     }
                 }
             }
@@ -94,6 +104,8 @@ public:
             window.clear(sf::Color::White);
 
             renderer.drawCircle(50, 200, 200, sf::Color::Red);
+            renderer.drawCircleSym4(50, 600, 200, sf::Color::Blue);
+            renderer.drawElipseSym4(50,25, 600, 400, sf::Color::Green);
             renderer.drawLine(80,0,80,200, sf::Color::Black);
             renderer.drawLineIncremental(30,0,30,200, sf::Color::Black);
             renderer.drawLineIncremental(600, 100, 550, 50, sf::Color::Black);
@@ -101,13 +113,17 @@ public:
             line.draw(renderer);
 
             renderer.drawOSline(points, sf::Color::Green, false);
-
             renderer.drawOSline(points2, sf::Color::Blue, true);
-
             renderer.drawOSline(segments, sf::Color::Red, false);
+            renderer.drawPolygon(polygon, sf::Color::Cyan, false);
 
             window.draw(shape);
-            //window.draw(doroShape);
+
+            // Zmiana 2: Rysowanie pikseli na ekranie
+            for (const auto& pixel : pixels) {
+                window.draw(pixel); // Rysujemy każdy piksel z wektora
+            }
+
             window.display();
         }
     }
