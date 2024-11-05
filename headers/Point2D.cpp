@@ -16,21 +16,27 @@ void Point2D::setXY(float x, float y) { this->x = x; this->y = y; }
 void Point2D::draw(PrimitiveRenderer& renderer, sf::Color color) const { renderer.drawCircle(1.f, x, y, color); }
 
 void Point2D::translate(float tx, float ty) {
-    x += tx;
-    y += ty;
+    this->x += tx;
+    this->y += ty;
 }
 
 void Point2D::rotate(float angle, float centerX, float centerY) {
-    float radians = angle * M_PI / 180.0f;
+    float radians = angle * (M_PI / 180.0f);
     float newX = centerX + (x - centerX) * cos(radians) - (y - centerY) * sin(radians);
-    //float newX = atanf(centerX-x);
-    //float newY = atanf(centerY-y);
     float newY = centerY + (x - centerX) * sin(radians) + (y - centerY) * cos(radians);
-    x = newX;
-    y = newY;
+
+    this->x = newX;
+    this->y = newY;
 }
 
 void Point2D::scale(float kx, float ky, float centerX, float centerY) {
-    x += kx;
-    y += ky;
+    //cout<<kx<<endl<<ky<<endl<<centerX<<endl<<centerY<<endl;
+    float newX = x * kx + (1-kx) * centerX;
+    float newY =  y * ky + (1-ky) * centerY;
+
+    //cout<<"X: "<<x<<" NewX: "<<newX<<endl;
+    //cout<<"Y: "<<y<<" NewY: "<<newY<<endl;
+
+    this->x = newX;
+    this->y = newY;
 }

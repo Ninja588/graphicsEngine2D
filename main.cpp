@@ -1,7 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <cmath>
-#include <vector> // Dodajemy <vector> dla przechowywania pikseli
+#include <vector>
 #include "headers/PrimitiveRenderer.h"
 #include "headers/Point2D.h"
 #include "headers/LineSegment.h"
@@ -19,7 +19,6 @@ class Engine {
 private:
     bool checkFullscreen = false;
     int resWidth, resHeight;
-    vector<sf::CircleShape> pixels;  // We will store drawn pixels here
 
 public:
     Engine(int maxFps, int resWidth, int resHeight) : resWidth(resWidth), resHeight(resHeight) {
@@ -37,14 +36,16 @@ public:
         Point2D point3(200.f, 350.f);
         LineSegment line(p, p2);
         line.setStartPoint(point3);
-        point1.translate(50, 50);
-        point2.translate(50, 50);
-        point3.translate(50, 50);
+        // point1.translate(50, 50);
+        // point2.translate(50, 50);
+        // point3.translate(50, 50);
 
         LineSegment line1(p, p2);
         line1.setStartPoint(point3);
 
-        line1.scale(10,10);
+        line1.translate(50,50);
+        line1.rotate(90);
+        line1.scale(3.f,3.f);
 
         vector<Point2D> points = { Point2D(100.f, 100.f), Point2D(200.f, 100.f), Point2D(200.f, 200.f), Point2D(100.f, 200.f) };
         vector<Point2D> points2 = { Point2D(150.f, 150.f), Point2D(250.f, 150.f), Point2D(250.f, 250.f), Point2D(150.f, 250.f) };
@@ -78,12 +79,6 @@ public:
                     if(event.mouseButton.button == sf::Mouse::Left) {
                         sf::Vector2i mousePos = sf::Mouse::getPosition(window);
                         shape.playerShape.setPosition(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
-                        
-                        // Zmiana 1: Dodawanie pikseli do wektora
-                        sf::CircleShape pixel(1.f); // Utworzenie kształtu dla piksela
-                        pixel.setFillColor(sf::Color::Red); // Ustaw kolor na czerwony
-                        pixel.setPosition(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y)); // Ustaw pozycję piksela
-                        pixels.push_back(pixel); // Dodaj piksel do wektora
                     }
                 }
             }
@@ -138,11 +133,6 @@ public:
             renderer.drawPolygon(polygon, sf::Color::Cyan, false);
 
             window.draw(shape.playerShape);
-
-            // Zmiana 2: Rysowanie pikseli na ekranie
-            for (const auto& pixel : pixels) {
-                window.draw(pixel); // Rysujemy każdy piksel z wektora
-            }
 
             window.display();
         }
