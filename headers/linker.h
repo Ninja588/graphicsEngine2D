@@ -7,6 +7,10 @@
 #include "DrawableObject.cpp"
 #include "TransformableObject.cpp"
 #include "ShapeObject.cpp"
+#include "BitmapHandler.cpp"
+#include "BitmapObject.cpp"
+#include "SpriteObject.cpp"
+#include "DrawableObject.cpp"
 #include "Player.cpp"
 
 

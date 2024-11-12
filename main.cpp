@@ -10,6 +10,10 @@
 #include "headers/GameObject.h"
 #include "headers/ShapeObject.h"
 #include "headers/TransformableObject.h"
+#include "headers/BitmapHandler.h"
+#include "headers/BitmapObject.h"
+#include "headers/AnimatedObject.h"
+#include "headers/SpriteObject.h"
 
 #include "headers/linker.h"
 
@@ -64,7 +68,11 @@ public:
         // shape.setTexture(&texture);
         // shape.setOutlineThickness(3);
         // shape.setOutlineColor(sf::Color::Black);
-        Player shape = Player(50, 50, "whitePawn.png");
+        Player player(50, 50, "sprite.png");
+        player.resize(100,100);
+
+        //BitmapHandler bitmap; 
+        //bitmap.create(200, 200);
 
         while(window.isOpen())
         {
@@ -78,29 +86,41 @@ public:
                 if(event.type == sf::Event::MouseButtonPressed) {
                     if(event.mouseButton.button == sf::Mouse::Left) {
                         sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-                        shape.playerShape.setPosition(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
+                        player.sprite.setPosition(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
                     }
                 }
             }
 
+            //player.setDirection(Player::None);
+            
+            bool isMoving = false;
+
             if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-                shape.playerShape.move(-1, 0); // lewo
+                player.move(-1, 0); // lewo
+                isMoving = true;
             }
             if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-                shape.playerShape.move(1, 0); // prawo
+                player.move(1, 0); // prawo
+                isMoving = true;
+
             }
             if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-                shape.playerShape.move(0, -1); // gora
+                player.move(0, -1); // gora
+                isMoving = true;
             }
             if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-                shape.playerShape.move(0, 1); // dol
+                player.move(0, 1); // dol
+                isMoving = true;
             }
+
+            if (!isMoving) { 
+                player.setDirection(Player::None); 
+            }
+
             if(sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
                 window.close();
             }
-            if(sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-                shape.playerShape.setFillColor(sf::Color::Red);
-            }
+
             if(sf::Keyboard::isKeyPressed(sf::Keyboard::F)) {
                 if(!checkFullscreen)
                 {
@@ -132,7 +152,7 @@ public:
             //renderer.drawOSline(segments, sf::Color::Red, false);
             renderer.drawPolygon(polygon, sf::Color::Cyan, false);
 
-            window.draw(shape.playerShape);
+            player.draw(renderer, sf::Color::White);
 
             window.display();
         }

@@ -14,7 +14,10 @@ Point2D LineSegment::getEndPoint() const { return endPoint; }
 void LineSegment::setStartPoint(const Point2D& point) { startPoint = point; }
 void LineSegment::setEndPoint(const Point2D& point) { endPoint = point; }
 
-void LineSegment::draw(PrimitiveRenderer& renderer, sf::Color color) const { renderer.drawLineIncremental(startPoint.getX(), startPoint.getY(), endPoint.getX(), endPoint.getY(), color); }
+void LineSegment::draw(PrimitiveRenderer& renderer, sf::Color color) { 
+    color = sf::Color::Black;
+    renderer.drawLineIncremental(startPoint.getX(), startPoint.getY(), endPoint.getX(), endPoint.getY(), color); 
+}
 
 void LineSegment::translate(float tx, float ty) {
     startPoint.translate(tx, ty);

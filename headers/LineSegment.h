@@ -18,7 +18,7 @@ public:
     Point2D getEndPoint() const;
     void setStartPoint(const Point2D& point);
     void setEndPoint(const Point2D& point);
-    void draw(PrimitiveRenderer& renderer, sf::Color color = sf::Color::Black) const;
+    void draw(PrimitiveRenderer& renderer, sf::Color color = sf::Color::White) override;
 
     void translate(float tx, float ty) override;
     void rotate(float angle, float centerX = 0.f, float centerY = 0.f) override;

@@ -1,6 +1,8 @@
 #ifndef TRANSFORMABLEOBJECT_H
 #define TRANSFORMABLEOBJECT_H
 
+#include<SFML/Graphics.hpp>
+
 class TransformableObject{
 private:
 

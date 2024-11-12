@@ -13,7 +13,9 @@ void Point2D::setX(float x) { this->x = x; }
 void Point2D::setY(float y) { this->y = y; }
 void Point2D::setXY(float x, float y) { this->x = x; this->y = y; }
 
-void Point2D::draw(PrimitiveRenderer& renderer, sf::Color color) const { renderer.drawCircle(1.f, x, y, color); }
+void Point2D::draw(PrimitiveRenderer& renderer, sf::Color color) { 
+    renderer.drawCircle(1.f, x, y, color); 
+}
 
 void Point2D::translate(float tx, float ty) {
     this->x += tx;
@@ -39,4 +41,8 @@ void Point2D::scale(float kx, float ky, float centerX, float centerY) {
 
     this->x = newX;
     this->y = newY;
+}
+
+Point2D Point2D::getPoint() {
+    return Point2D(x,y);
 }

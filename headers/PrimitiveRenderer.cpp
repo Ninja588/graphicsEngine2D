@@ -8,6 +8,18 @@ using namespace std;
 
 PrimitiveRenderer::PrimitiveRenderer(sf::RenderWindow& window) : window(window) {}
 
+void PrimitiveRenderer::draw(const sf::Sprite& sprite) {
+    window.draw(sprite);
+}
+
+void PrimitiveRenderer::draw(const sf::Shape& shape) {
+    window.draw(shape);
+}
+
+void PrimitiveRenderer::draw(const sf::Text& text) {
+    window.draw(text);
+}
+
 void PrimitiveRenderer::drawCircle(float radius, float x, float y, sf::Color color) {
     sf::CircleShape circle(radius);
     circle.setPosition(x, y);
